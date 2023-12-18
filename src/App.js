@@ -1,18 +1,35 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Routes, Route } from 'react-router-dom';
 
 import './App.css';
 
-import Dashboard from './components/Dashboard';
-//import Register from './components/Authentication/Sinup';
 import SignIn from './components/Authentication/Login';
 import NotFound from './components/NotFound';
+import Dashboard from './Pages/Dashboard';
+import Home from './Pages/Home/Home';
+import { ProtectedRoute } from './ProtectedRoute';
 
 function App() {
   return (
     <Routes>
       <Route path='/login' element={<SignIn />} />
-      {/* <Route path='/register' element={<Register />} /> */}
-      <Route path='/' element={<Dashboard />} />
+      <Route
+        path='/'
+        element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path='/salesdata'
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+
       <Route path='*' element={<NotFound />} />
     </Routes>
   );

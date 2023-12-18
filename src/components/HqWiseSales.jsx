@@ -1,15 +1,25 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { BarChart } from '@mui/x-charts/BarChart';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
-import { Box, useMediaQuery } from '@mui/material';
+import { BarChart } from '@mui/x-charts/BarChart';
+import { LineChart } from '@mui/x-charts/LineChart';
+import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
+
+import {
+  Box,
+  Stack,
+  ToggleButton,
+  ToggleButtonGroup,
+  useMediaQuery,
+} from '@mui/material';
 
 import FacebookCircularProgress from './ProgressLoader';
-
-import Swal from 'sweetalert2';
 import { SelectOption, Years } from './SelectInput';
+import { colors } from '../Utils/Colors';
+import { Months } from '../Utils/Months';
 
 const HqWiseSales = () => {
   const [selectedYear, setSelectedYear] = useState(
@@ -18,8 +28,10 @@ const HqWiseSales = () => {
   const [selectedHq, setHq] = useState('');
   const [hqData, setHqData] = useState([]);
   const [sales, setSales] = React.useState([]);
-
   const [loading, setLoading] = useState(false);
+
+  const [chartType, setChartType] = React.useState('bar');
+
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   const baseurl = 'http://172.19.1.44:5001/api/v1/data';
@@ -88,22 +100,7 @@ const HqWiseSales = () => {
     getSales();
   }, [selectedHq, selectedYear]);
 
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
-  const salesData = months.map((month, i) => {
+  const salesData = Months.map((month, i) => {
     const sale = sales.find((sale) => sale.MonthName === i + 1);
     if (sale) {
       return { ...sale, MonthName: month };
@@ -115,21 +112,37 @@ const HqWiseSales = () => {
     }
   });
 
+  const handleChartType = (event, newChartType) => {
+    if (newChartType !== null) {
+      setChartType(newChartType);
+    }
+  };
+
+  const TOTAL =
+    sales.length > 0
+      ? sales.reduce((total, tab) => total + parseFloat(tab.TotalNetAmount), 0)
+      : 0;
+
+  const getArcLabel = (params) => {
+    const percent = params.value / TOTAL;
+    const percentage = (percent * 100).toFixed(0);
+    return percentage > 2 ? `${percentage}%` : '';
+  };
+
   return (
     <div className='graph-main-container'>
       {loading && <FacebookCircularProgress />}
       <Box
         sx={{
           display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          justifyContent: 'space-around',
-          alignItems: 'center',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
         }}>
         <h3 className='graph-title m-0'>Hq Wise Sales NetAmount</h3>
         <Box
           sx={{
             display: 'flex',
-            justifyContent: 'space-around',
+            justifyContent: 'space-between',
             alignItems: 'center',
             marginTop: isMobile ? 2 : 0,
           }}>
@@ -142,42 +155,148 @@ const HqWiseSales = () => {
           <Years year={selectedYear} setYear={setSelectedYear} />
         </Box>
       </Box>
-      {sales.length === 0 && !loading && (
-        <div className='text-danger align-self-center my-5'>
-          <h2>No Records Found</h2>
-        </div>
-      )}
-      {sales.length > 0 && (
-        <BarChart
-          height={500}
-          margin={{ left: 100, bottom: 80 }}
-          slotProps={{
-            legend: { hidden: true },
-          }}
-          series={[
-            {
-              data: salesData.map((hq) => hq.TotalNetAmount),
-              label: 'NetAmount',
-              id: 'pvId',
-            },
-          ]}
-          xAxis={[
-            {
-              data: salesData.map((hq) => hq.MonthName),
-              scaleType: 'band',
-              tickLabelStyle: {
-                angle: 320,
-                dominantBaseline: 'hanging',
-                textAnchor: 'end',
-              },
-              labelStyle: {
-                transform: 'translateY(15px)',
-              },
-            },
-            { min: 10, max: 50, scaleType: 'linear' },
-          ]}
-        />
-      )}
+      <Stack
+        direction={{ xs: 'column', xl: 'row' }}
+        spacing={1}
+        sx={{ width: '100%' }}>
+        <Box>
+          <ToggleButtonGroup
+            value={chartType}
+            exclusive
+            onChange={handleChartType}
+            aria-label='chart type'
+            fullWidth>
+            {['bar', 'line', 'pie'].map((type) => (
+              <ToggleButton key={type} value={type} aria-label='left aligned'>
+                {type}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
+        </Box>
+        {sales.length === 0 && !loading ? (
+          <div className='text-danger align-self-center my-5'>
+            <h2>No Records Found</h2>
+          </div>
+        ) : (
+          <Box>
+            {chartType === 'bar' && (
+              <BarChart
+                height={350}
+                margin={{ left: 100, bottom: 80 }}
+                slotProps={{
+                  legend: { hidden: true },
+                }}
+                series={[
+                  {
+                    data: salesData.map((hq) => hq.TotalNetAmount),
+                    label: 'NetAmount',
+                    id: 'pvId',
+                  },
+                ]}
+                xAxis={[
+                  {
+                    data: salesData.map((hq) => hq.MonthName),
+                    scaleType: 'band',
+                    tickLabelStyle: {
+                      angle: 320,
+                      dominantBaseline: 'hanging',
+                      textAnchor: 'end',
+                    },
+                    labelStyle: {
+                      transform: 'translateY(15px)',
+                    },
+                  },
+                  { min: 10, max: 50, scaleType: 'linear' },
+                ]}
+              />
+            )}
+
+            {chartType === 'line' && (
+              <LineChart
+                height={350}
+                series={[
+                  {
+                    data: salesData.map((sale) =>
+                      parseInt(sale.TotalNetAmount)
+                    ),
+                    label: 'NetAmount',
+                  },
+                ]}
+                xAxis={[
+                  {
+                    scaleType: 'point',
+                    data: Months,
+                    tickLabelStyle: {
+                      angle: 325,
+                      dominantBaseline: 'hanging',
+                      textAnchor: 'end',
+                    },
+                    labelStyle: {
+                      transform: 'translateY(15px)',
+                    },
+                  },
+                ]}
+                animate={{
+                  onLoad: { duration: 3000 }, // Optional: animation when the chart initially loads
+                }}
+                margin={{ left: 80, bottom: 75 }}
+                slotProps={{
+                  legend: {
+                    hidden: true,
+                  },
+                }}
+              />
+            )}
+
+            {chartType === 'pie' && (
+              <PieChart
+                series={[
+                  {
+                    data: salesData.map((tab, i) => ({
+                      id: i,
+                      value: tab.TotalNetAmount,
+                      label: tab.MonthName,
+                      color: colors[i],
+                    })),
+                    highlightScope: { faded: 'global', highlighted: 'item' },
+                    faded: {
+                      innerRadius: 30,
+                      additionalRadius: -0,
+                      color: 'gray',
+                    },
+                    cx: isMobile ? 165 : 290,
+                    arcLabel: getArcLabel,
+                  },
+                ]}
+                sx={{
+                  [`& .${pieArcLabelClasses.root}`]: {
+                    fill: 'white',
+                    fontSize: 15,
+                  },
+                }}
+                slotProps={{
+                  legend: {
+                    direction: 'row',
+                    position: {
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    },
+                    itemMarkWidth: 10,
+                    itemMarkHeight: 10,
+                  },
+                }}
+                margin={{
+                  top: isMobile ? -70 : 10,
+                  bottom: isMobile ? 50 : 100,
+                  left: 1,
+                  right: 100,
+                }}
+                height={isMobile ? 400 : 350}
+              />
+            )}
+          </Box>
+        )}
+      </Stack>
     </div>
   );
 };

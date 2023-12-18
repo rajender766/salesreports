@@ -1,31 +1,20 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-
-import { BarChart } from '@mui/x-charts/BarChart';
-import FacebookCircularProgress from './ProgressLoader';
-import { SelectOption, Years } from './SelectInput';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { useMediaQuery } from '@mui/material';
 import Swal from 'sweetalert2';
+
+import Box from '@mui/material/Box';
+import { BarChart } from '@mui/x-charts/BarChart';
+import { useMediaQuery } from '@mui/material';
+
+import FacebookCircularProgress from './ProgressLoader';
+import { SelectOption, Years } from './SelectInput';
+import { Months } from '../Utils/Months';
 
 const xAxis = {
   scaleType: 'band',
-  data: [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ],
+  data: Months,
 };
 
 export default function StateWiseSales() {

@@ -1,5 +1,6 @@
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import React from 'react';
+
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 export const Years = ({ year, setYear }) => {
   const currentYear = new Date().getFullYear();
@@ -12,7 +13,7 @@ export const Years = ({ year, setYear }) => {
     setYear(e.target.value);
   };
   return (
-    <FormControl required size='small' sx={{ m: 1, minWidth: 150 }}>
+    <FormControl required size='small' sx={{ my: 1, minWidth: 150 }}>
       <InputLabel id='year-simple-select-required-label'>Year</InputLabel>
       <Select
         labelId='year-simple-select-required-label'
@@ -38,7 +39,10 @@ export const SelectOption = (props) => {
   };
   return (
     <>
-      <FormControl required size='small' sx={{ m: 1, minWidth: 150 }}>
+      <FormControl
+        required
+        size='small'
+        sx={{ my: 1, minWidth: 150, maxWidth: 150 }}>
         <InputLabel id='brand-simple-select-required-label'>{label}</InputLabel>
         <Select
           labelId='brand-simple-select-required-label'

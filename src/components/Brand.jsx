@@ -1,11 +1,14 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { LineChart } from '@mui/x-charts/LineChart';
-import axios from 'axios';
-import CircularProgress from '@mui/material/CircularProgress';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+import axios from 'axios';
+
+import CircularProgress from '@mui/material/CircularProgress';
+import { LineChart } from '@mui/x-charts/LineChart';
+
 import { SelectOption, Years } from './SelectInput';
+import { Months } from '../Utils/Months';
 
 const Brand = () => {
   const [brands, setBands] = useState([]);
@@ -66,22 +69,7 @@ const Brand = () => {
     brandData();
   }, [brand, year]);
 
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
-  const salesData = months.map((month, i) => {
+  const salesData = Months.map((month, i) => {
     const sale = sales.find((sale) => sale.monthName === i + 1);
     if (sale) {
       return { ...sale, monthName: month };
@@ -94,8 +82,6 @@ const Brand = () => {
       };
     }
   });
-
-  console.log();
 
   return (
     <div className='graph-main-container'>
@@ -122,8 +108,8 @@ const Brand = () => {
           </div>
         ) : (
           <LineChart
-            height={315}
-            margin={{ bottom: 70 }}
+            height={380}
+            margin={{ bottom: 70, top: 70 }}
             series={[
               {
                 data: salesData.map((sale) => sale.TotalSaleQty),
@@ -143,7 +129,7 @@ const Brand = () => {
             xAxis={[
               {
                 scaleType: 'point',
-                data: months,
+                data: Months,
                 tickLabelStyle: {
                   angle: 325,
                   dominantBaseline: 'hanging',
@@ -165,5 +151,3 @@ const Brand = () => {
 };
 
 export default Brand;
-
-// <Line data={dataline} options={optionsline1} />

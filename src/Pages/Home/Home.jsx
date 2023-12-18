@@ -1,12 +1,11 @@
 import React from 'react';
 import './Home.css';
 
-import DivisionsSales from '../../components/DivisionsSales';
+//import DivisionsSales from '../../components/DivisionsSales';
 import Brand from '../../components/Brand';
 import HqWiseSales from '../../components/HqWiseSales';
 import { TherapeuticGroup } from '../../components/TherapeuticGroup';
 import Header from '../../components/Header';
-//import Sidebar from '../../components/Sidebar';
 import StateWiseSales from '../../components/StateWise';
 import Footer from '../../components/Footer';
 
@@ -20,7 +19,7 @@ const Home = () => {
           <Brand />
         </div>
         <div className='col-md-6'>
-          <DivisionsSales />
+          <HqWiseSales />
         </div>
       </div>
       <div className='row pie-chart_container'>
@@ -31,11 +30,11 @@ const Home = () => {
           <StateWiseSales />
         </div>
       </div>
-      <div className='row'>
+      {/* <div className='row'>
         <div className='col-md-6'>
-          <HqWiseSales />
+          <DivisionsSales />
         </div>
-      </div>
+      </div> */}
       <Footer />
     </div>
   );

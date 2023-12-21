@@ -27,10 +27,6 @@
   border-radius: 15px;
 }
 
-/* rgba(78, 252, 206, 0.4) //#f5f4f4  */
-/* 174,
-212,255   #aed4ff   13 202 240 rgb(13, 202, 240, 0.5) rgb(174, 212, 255, 0.5)*/
-
 .header-navigator {
   text-decoration: none;
   color: black;
@@ -67,9 +63,16 @@
   height: 46px;
 }
 
+.profile-container {
+  width: 100%;
+}
+
 @media screen and (min-width: 768px) {
   .navbar-expand {
     width: 430px;
+  }
+  .profile-container {
+    width: 25%;
   }
 }
 
@@ -82,4 +85,10 @@
   }
 }
 
-/* nav_container */
+.profile-details-container {
+  display: flex;
+  min-width: 100%;
+  max-width: 150%;
+  justify-content: space-between;
+  align-items: center;
+}

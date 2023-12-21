@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
@@ -10,6 +11,8 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { SelectOption, Years } from './SelectInput';
 import { Months } from '../Utils/Months';
 
+import { handleApiError } from '../Utils/Error';
+
 const Brand = () => {
   const [brands, setBands] = useState([]);
   const [sales, setSales] = useState([]);
@@ -17,13 +20,12 @@ const Brand = () => {
   const [year, setYear] = useState(`${new Date().getFullYear()}`);
   const [loading, setLoading] = useState(false);
 
-  const baseurl = 'http://172.19.1.44:5001/api/v1/data';
+  const baseurl = 'http://20.235.149.147:5001/api/v1/data';
 
   useEffect(() => {
     const getData = async () => {
       try {
         const brandurl = `${baseurl}/brands`;
-
         const jwtToken = Cookies.get('sales-token');
         const headers = {
           'Content-Type': 'application/json',
@@ -39,13 +41,8 @@ const Brand = () => {
         setBrand(brandResponse.data[0].BrandCode);
         setLoading(false);
       } catch (e) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Something went wrong',
-          showCloseButton: true,
-          confirmButtonText: 'OK',
-        });
+        setLoading(false);
+        handleApiError(e);
       }
     };
     getData();
@@ -64,7 +61,10 @@ const Brand = () => {
         const response = await axios.post(Url, { brand, year }, { headers });
         setSales(response.data);
         setLoading(false);
-      } catch (error) {}
+      } catch (error) {
+        setLoading(false);
+        handleApiError(error);
+      }
     };
     brandData();
   }, [brand, year]);

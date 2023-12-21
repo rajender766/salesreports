@@ -11,6 +11,7 @@ import { useMediaQuery } from '@mui/material';
 import FacebookCircularProgress from './ProgressLoader';
 import { SelectOption, Years } from './SelectInput';
 import { Months } from '../Utils/Months';
+import { handleApiError } from '../Utils/Error';
 
 const xAxis = {
   scaleType: 'band',
@@ -28,7 +29,7 @@ export default function StateWiseSales() {
   const [stackOrder, setStackOrder] = useState('appearance');
   const isMobile = useMediaQuery('(max-width: 600px)');
 
-  const baseurl = 'http://172.19.1.44:5001/api/v1/data';
+  const baseurl = 'http://20.235.149.147:5001/api/v1/data';
 
   useEffect(() => {
     const getData = async () => {
@@ -50,13 +51,7 @@ export default function StateWiseSales() {
         setLoading(false);
       } catch (e) {
         setLoading(false);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Something went wrong',
-          showCloseButton: true,
-          confirmButtonText: 'OK',
-        });
+        handleApiError(e);
       }
     };
     getData();
@@ -81,13 +76,7 @@ export default function StateWiseSales() {
         setLoading(false);
       } catch (error) {
         setLoading(false);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Something went wrong',
-          showCloseButton: true,
-          confirmButtonText: 'OK',
-        });
+        handleApiError(error);
       }
     };
     getSales();
@@ -190,14 +179,3 @@ export default function StateWiseSales() {
     </Box>
   );
 }
-
-// {
-//   label: 'NetQty',
-//   data:
-//     salesData.length > 0
-//       ? salesData.map((sale) => parseInt(sale.TotalNetQty))
-//       : [0, 0],
-//   stack: 'total',
-//   color: '#fc03df', //#f4fc03 #fc03df
-//   stackOrder: 'assending',
-// },

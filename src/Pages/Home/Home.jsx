@@ -8,6 +8,7 @@ import { TherapeuticGroup } from '../../components/TherapeuticGroup';
 import Header from '../../components/Header';
 import StateWiseSales from '../../components/StateWise';
 import Footer from '../../components/Footer';
+import CoustomerSales from '../../components/CustomerSales';
 
 const Home = () => {
   document.title = 'Primary Sales | Dashboard';
@@ -30,11 +31,11 @@ const Home = () => {
           <StateWiseSales />
         </div>
       </div>
-      {/* <div className='row'>
+      <div className='row'>
         <div className='col-md-6'>
-          <DivisionsSales />
+          <CoustomerSales />
         </div>
-      </div> */}
+      </div>
       <Footer />
     </div>
   );

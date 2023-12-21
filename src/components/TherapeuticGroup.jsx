@@ -10,6 +10,7 @@ import { Box } from '@mui/material';
 import FacebookCircularProgress from './ProgressLoader';
 import { Years } from './SelectInput';
 import { colors } from '../Utils/Colors';
+import { handleApiError } from '../Utils/Error';
 
 import './component.css';
 
@@ -20,7 +21,7 @@ export const TherapeuticGroup = () => {
   const [sales, setSales] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const baseurl = 'http://172.19.1.44:5001/api/v1/data';
+  const baseurl = 'http://20.235.149.147:5001/api/v1/data';
 
   useEffect(() => {
     const getSales = async () => {
@@ -37,12 +38,11 @@ export const TherapeuticGroup = () => {
           { year: selectedYear },
           { headers }
         );
-
         setSales(response.data);
-
         setLoading(false);
       } catch (error) {
         setLoading(false);
+        handleApiError(error);
       }
     };
     getSales();
@@ -59,6 +59,7 @@ export const TherapeuticGroup = () => {
         },
         itemMarkWidth: 10,
         itemMarkHeight: 10,
+        itemGap: 3,
       }
     : {
         direction: 'column',
@@ -70,6 +71,7 @@ export const TherapeuticGroup = () => {
         },
         itemMarkWidth: 10,
         itemMarkHeight: 10,
+        label: sales.map((tab) => tab.TherapeuticName),
       };
 
   const TOTAL =
@@ -80,7 +82,12 @@ export const TherapeuticGroup = () => {
   const getArcLabel = (params) => {
     const percent = params.value / TOTAL;
     const percentage = (percent * 100).toFixed(0);
-    return percentage > 4 ? `${percentage}%` : '';
+    const result = params.show
+      ? `${percentage}%`
+      : percentage > 4
+      ? `${percentage}%`
+      : '';
+    return result;
   };
 
   return (
@@ -107,12 +114,15 @@ export const TherapeuticGroup = () => {
               data: sales.map((tab, i) => ({
                 id: i,
                 value: tab.TotalNetAmount,
-                label: tab.TherapeuticName,
+                label: `${tab.TherapeuticName} - ${getArcLabel({
+                  value: tab.TotalNetAmount,
+                  show: true,
+                })}`,
                 color: colors[i],
               })),
               highlightScope: { faded: 'global', highlighted: 'item' },
               faded: { innerRadius: 30, additionalRadius: -0, color: 'gray' },
-              cx: isMobile ? 150 : 190,
+              cx: isMobile ? 150 : 160,
               arcLabel: getArcLabel,
             },
           ]}
@@ -131,7 +141,7 @@ export const TherapeuticGroup = () => {
             left: 1,
             right: 100,
           }}
-          height={isMobile ? 450 : 413}
+          height={isMobile ? 500 : 413}
         />
       )}
     </div>

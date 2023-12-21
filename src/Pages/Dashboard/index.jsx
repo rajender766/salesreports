@@ -45,7 +45,7 @@ const Dashboard = () => {
     getReports(e, 1);
   };
 
-  const baseUrl = 'http://localhost:5001/api/v1/sales';
+  const baseUrl = 'http://20.235.149.147:5001/api/v1/sales';
 
   useEffect(() => {
     document.title = 'PrimarySales | Data';

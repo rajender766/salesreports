@@ -8,7 +8,6 @@ import CryptoJS from 'crypto-js';
 
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import Link from '@mui/material/Link';
 
 import Box from '@mui/material/Box';
 
@@ -32,8 +31,6 @@ import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme();
-
-
 
 export default function SignIn() {
   document.title = 'PrimarySales | Loin Page';
@@ -240,9 +237,12 @@ export default function SignIn() {
                 align='center'
                 sx={{ mt: 8, mb: 4 }}>
                 {'Copyright © '}
-                <Link color='inherit' href='https://www.heterohealthcare.com/'>
+                <a
+                  color='inherit'
+                  target='__blanck'
+                  href='https://www.heterohealthcare.com/'>
                   Hetero Health Care
-                </Link>{' '}
+                </a>{' '}
                 {new Date().getFullYear()}
                 {'.'}
               </Typography>

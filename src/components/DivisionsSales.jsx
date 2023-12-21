@@ -30,7 +30,7 @@ const DivisionsSales = () => {
   ]);
   const [loading, setLoading] = useState(false);
 
-  const baseurl = 'http://172.19.1.44:5001/api/v1/data';
+  const baseurl = 'http://20.235.149.147:5001/api/v1/data';
 
   useEffect(() => {
     const getSales = async () => {

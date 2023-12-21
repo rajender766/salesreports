@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
@@ -5,7 +6,6 @@ import axios from 'axios';
 
 import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
 
 import {
   Box,
@@ -17,32 +17,32 @@ import {
 
 import FacebookCircularProgress from './ProgressLoader';
 import { SelectOption, Years } from './SelectInput';
-import { colors } from '../Utils/Colors';
 import { Months } from '../Utils/Months';
 
 import './component.css';
 import { handleApiError } from '../Utils/Error';
 
-const HqWiseSales = () => {
+const CoustomerSales = () => {
   const [selectedYear, setSelectedYear] = useState(
     `${new Date().getFullYear()}`
   );
   const [selectedHq, setHq] = useState('');
+  const [coustomerCode, setCoustomerCode] = useState('');
   const [hqData, setHqData] = useState([]);
+  const [coustomers, setCoustomers] = useState([]);
   const [sales, setSales] = React.useState([]);
   const [loading, setLoading] = useState(false);
 
-  const [chartType, setChartType] = React.useState('bar');
+  const [chartType, setChartType] = useState('Quntity');
 
   const isMobile = useMediaQuery('(max-width: 768px)');
 
-  const baseurl = 'http://20.235.149.147:5001/api/v1/data';
+  const baseurl = 'http://localhost:5001/api/v1/data';
 
   useEffect(() => {
-    const getData = async () => {
+    const getHqData = async () => {
       try {
         const brandurl = `${baseurl}/hqs`;
-
         const jwtToken = Cookies.get('sales-token');
         const headers = {
           'Content-Type': 'application/json',
@@ -62,13 +62,44 @@ const HqWiseSales = () => {
         handleApiError(e);
       }
     };
-    getData();
+    getHqData();
   }, []);
+
+  useEffect(() => {
+    const getCustomerData = async () => {
+      try {
+        const brandurl = `${baseurl}/customers`;
+
+        const jwtToken = Cookies.get('sales-token');
+        const headers = {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwtToken}`,
+        };
+        setLoading(true);
+        const response = await axios.post(
+          brandurl,
+          { hqCode: selectedHq },
+          { headers }
+        );
+        const data = response.data.map((obj) => ({
+          code: obj.CustomerCode,
+          name: obj.CustomerName,
+        }));
+        setCoustomers(data);
+        setCoustomerCode(data[0] ? data[0].code : '');
+        setLoading(false);
+      } catch (e) {
+        setLoading(false);
+        handleApiError(e);
+      }
+    };
+    getCustomerData();
+  }, [selectedHq]);
 
   useEffect(() => {
     const getSales = async () => {
       try {
-        const Url = `${baseurl}/hq/sales`;
+        const Url = `${baseurl}/customer/sales`;
         const jwtToken = Cookies.get('sales-token');
         const headers = {
           'Content-Type': 'application/json',
@@ -77,27 +108,33 @@ const HqWiseSales = () => {
         setLoading(true);
         const response = await axios.post(
           Url,
-          { selectedHq, year: selectedYear },
+          { coustomerCode, year: selectedYear },
           { headers }
         );
-
         setSales(response.data);
         setLoading(false);
       } catch (error) {
-        setLoading(false);
         handleApiError(error);
       }
     };
     getSales();
-  }, [selectedHq, selectedYear]);
+  }, [coustomerCode, selectedYear]);
 
   const salesData = Months.map((month, i) => {
-    const sale = sales.find((sale) => sale.MonthName === i + 1);
+    const sale = sales.find((sale) => sale.SaleMonth === i + 1);
+
     if (sale) {
       return { ...sale, MonthName: month };
     } else {
       return {
         MonthName: month,
+        SaleMonth: 0,
+        TotalSaleQty: 0,
+        TotalReturnQty: 0,
+        TotalNetQty: 0,
+        TotalFreeQty: 0,
+        TotalSaleAmount: 0,
+        TotalReturnAmount: 0,
         TotalNetAmount: 0,
       };
     }
@@ -109,22 +146,6 @@ const HqWiseSales = () => {
     }
   };
 
-  const TOTAL =
-    sales.length > 0
-      ? sales.reduce((total, tab) => total + parseFloat(tab.TotalNetAmount), 0)
-      : 0;
-
-  const getArcLabel = (params) => {
-    const percent = params.value / TOTAL;
-    const percentage = (percent * 100).toFixed(0);
-    const result = params.show
-      ? `${percentage}%`
-      : percentage > 2
-      ? `${percentage}%`
-      : '';
-    return result;
-  };
-
   return (
     <div className='graph-main-container'>
       {loading && <FacebookCircularProgress />}
@@ -134,7 +155,7 @@ const HqWiseSales = () => {
           flexDirection: 'column',
           justifyContent: 'space-between',
         }}>
-        <h3 className='graph-title m-0'>Hq Wise Sales NetAmount</h3>
+        <h3 className='graph-title m-0'>Coustomer Wise Sales</h3>
         <Box
           sx={{
             display: 'flex',
@@ -147,6 +168,12 @@ const HqWiseSales = () => {
             data={hqData}
             option={selectedHq}
             setOption={setHq}
+          />
+          <SelectOption
+            label={'Coustomer'}
+            data={coustomers}
+            option={coustomerCode}
+            setOption={setCoustomerCode}
           />
           <Years year={selectedYear} setYear={setSelectedYear} />
         </Box>
@@ -162,7 +189,7 @@ const HqWiseSales = () => {
             onChange={handleChartType}
             aria-label='chart type'
             fullWidth>
-            {['bar', 'line', 'pie'].map((type) => (
+            {['Quantity', 'Amounts'].map((type) => (
               <ToggleButton key={type} value={type} aria-label='left aligned'>
                 {type}
               </ToggleButton>
@@ -175,47 +202,28 @@ const HqWiseSales = () => {
           </div>
         ) : (
           <Box>
-            {chartType === 'bar' && (
-              <BarChart
-                height={350}
-                margin={{ left: 100, bottom: 80 }}
-                slotProps={{
-                  legend: { hidden: true },
-                }}
-                series={[
-                  {
-                    data: salesData.map((hq) => hq.TotalNetAmount),
-                    label: 'NetAmount ₹',
-                    id: 'pvId',
-                  },
-                ]}
-                xAxis={[
-                  {
-                    data: salesData.map((hq) => hq.MonthName),
-                    scaleType: 'band',
-                    tickLabelStyle: {
-                      angle: 320,
-                      dominantBaseline: 'hanging',
-                      textAnchor: 'end',
-                    },
-                    labelStyle: {
-                      transform: 'translateY(15px)',
-                    },
-                  },
-                  { min: 10, max: 50, scaleType: 'linear' },
-                ]}
-              />
-            )}
-
-            {chartType === 'line' && (
+            {chartType === 'Quantity' && (
               <LineChart
                 height={350}
                 series={[
                   {
-                    data: salesData.map((sale) =>
-                      parseInt(sale.TotalNetAmount)
-                    ),
-                    label: 'NetAmount ₹',
+                    data: salesData.map((sale) => sale.TotalSaleQty),
+                    label: 'SaleQty',
+                  },
+                  {
+                    data: salesData.map((sale) => sale.TotalReturnQty),
+                    label: 'ReturnQty',
+                    color: '#e15759',
+                  },
+                  {
+                    data: salesData.map((sale) => sale.TotalNetQty),
+                    label: 'NetQty',
+                    color: '#4e79a7',
+                  },
+                  {
+                    data: salesData.map((sale) => sale.TotalFreeQty),
+                    label: 'FreeQty',
+                    color: '#edc949',
                   },
                 ]}
                 xAxis={[
@@ -243,56 +251,47 @@ const HqWiseSales = () => {
                 }}
               />
             )}
-
-            {chartType === 'pie' && (
-              <PieChart
+            {chartType === 'Amounts' && (
+              <BarChart
+                height={350}
+                margin={{ left: 100, bottom: 80 }}
+                slotProps={{
+                  legend: { hidden: true },
+                }}
                 series={[
                   {
-                    data: salesData.map((tab, i) => ({
-                      id: i,
-                      value: tab.TotalNetAmount,
-                      label: `${tab.MonthName} - ${getArcLabel({
-                        value: tab.TotalNetAmount,
-                        show: true,
-                      })}`,
-                      color: colors[i],
-                    })),
-                    paddingAngle: 0.5,
-                    highlightScope: { faded: 'global', highlighted: 'item' },
-                    faded: {
-                      innerRadius: 30,
-                      additionalRadius: -0,
-                      color: 'gray',
-                    },
-                    cx: isMobile ? 165 : 290,
-                    arcLabel: getArcLabel,
+                    data: salesData.map((cus) => cus.TotalSaleAmount),
+                    label: 'SaleAmount ₹',
+                    id: 'sale',
+                  },
+                  {
+                    data: salesData.map((cus) => cus.TotalReturnAmount),
+                    label: 'ReturnAmount ₹',
+                    id: 'return',
+                    color: '#e15759',
+                  },
+                  {
+                    data: salesData.map((cus) => cus.TotalNetAmount),
+                    label: 'NetAmount ₹',
+                    id: 'Net',
+                    color: '#27f587',
                   },
                 ]}
-                sx={{
-                  [`& .${pieArcLabelClasses.root}`]: {
-                    fill: 'white',
-                    fontSize: 15,
-                  },
-                }}
-                slotProps={{
-                  legend: {
-                    direction: 'row',
-                    position: {
-                      vertical: 'bottom',
-                      horizontal: 'left',
+                xAxis={[
+                  {
+                    data: salesData.map((hq) => hq.MonthName),
+                    scaleType: 'band',
+                    tickLabelStyle: {
+                      angle: 320,
+                      dominantBaseline: 'hanging',
+                      textAnchor: 'end',
                     },
-                    itemMarkWidth: 10,
-                    itemMarkHeight: 10,
-                    itemGap: 2,
+                    labelStyle: {
+                      transform: 'translateY(15px)',
+                    },
                   },
-                }}
-                margin={{
-                  top: isMobile ? -70 : 10,
-                  bottom: isMobile ? 50 : 100,
-                  left: 1,
-                  right: 100,
-                }}
-                height={isMobile ? 420 : 350}
+                  { min: 10, max: 50, scaleType: 'linear' },
+                ]}
               />
             )}
           </Box>
@@ -302,4 +301,4 @@ const HqWiseSales = () => {
   );
 };
 
-export default HqWiseSales;
+export default CoustomerSales;

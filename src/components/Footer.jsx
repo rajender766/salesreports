@@ -1,6 +1,5 @@
 import { Typography } from '@mui/material';
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -12,9 +11,12 @@ const Footer = () => {
         align='center'
         sx={{ m: 2 }}>
         {'Copyright © '}
-        <Link color='inherit' href='https://www.heterohealthcare.com/'>
+        <a
+          color='inherit'
+          target='__blank'
+          href='https://www.heterohealthcare.com/'>
           Hetero Health Care
-        </Link>{' '}
+        </a>{' '}
         {new Date().getFullYear()}
         {'.'}
       </Typography>

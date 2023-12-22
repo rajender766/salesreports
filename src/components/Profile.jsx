@@ -9,11 +9,6 @@ const Profile = () => {
   document.title = 'Priamry Sales | Profile Details';
   const profileDetails = JSON.parse(localStorage.getItem('userDetails'));
 
-  // divisionCode: '07        ';
-  // divisionName: 'FRENZA';
-  // empName: 'dummy';
-  // employeeId: '12794';
-
   const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
       backgroundColor: '#44b700',
@@ -54,7 +49,7 @@ const Profile = () => {
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               variant='dot'>
               <Avatar
-                alt='Remy Sharp'
+                alt={profileDetails.empName}
                 sx={{ width: 100, height: 100 }}
                 src={profileImage}
               />

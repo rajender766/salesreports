@@ -11,8 +11,10 @@ export const handleApiError = (error) => {
 
   return Swal.fire({
     icon: 'error',
-    title: 'Error',
-    text: 'Oops Something went wrong !',
+    title: error.response ? error.response.status : 'Error',
+    text: error.response
+      ? error.response.statusText
+      : 'Oops Something went wrong !',
     showCloseButton: true,
     confirmButtonText: 'OK',
   });

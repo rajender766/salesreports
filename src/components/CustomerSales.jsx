@@ -33,7 +33,7 @@ const CoustomerSales = () => {
   const [sales, setSales] = React.useState([]);
   const [loading, setLoading] = useState(false);
 
-  const [chartType, setChartType] = useState('Quntity');
+  const [chartType, setChartType] = useState('Quantity');
 
   const isMobile = useMediaQuery('(max-width: 768px)');
 
@@ -209,21 +209,29 @@ const CoustomerSales = () => {
                   {
                     data: salesData.map((sale) => sale.TotalSaleQty),
                     label: 'SaleQty',
+                    area: true,
+                    showMark: false,
                   },
                   {
                     data: salesData.map((sale) => sale.TotalReturnQty),
                     label: 'ReturnQty',
                     color: '#e15759',
+                    area: true,
+                    showMark: false,
                   },
                   {
                     data: salesData.map((sale) => sale.TotalNetQty),
                     label: 'NetQty',
                     color: '#4e79a7',
+                    area: true,
+                    showMark: false,
                   },
                   {
                     data: salesData.map((sale) => sale.TotalFreeQty),
                     label: 'FreeQty',
                     color: '#edc949',
+                    area: true,
+                    showMark: false,
                   },
                 ]}
                 xAxis={[

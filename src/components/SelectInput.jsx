@@ -13,7 +13,7 @@ export const Years = ({ year, setYear }) => {
     setYear(e.target.value);
   };
   return (
-    <FormControl required size='small' sx={{ my: 1, minWidth: 150 }}>
+    <FormControl required size='small' sx={{ my: 1, maxWidth: 150 }}>
       <InputLabel id='year-simple-select-required-label'>Year</InputLabel>
       <Select
         labelId='year-simple-select-required-label'
@@ -42,7 +42,7 @@ export const SelectOption = (props) => {
       <FormControl
         required
         size='small'
-        sx={{ my: 1, minWidth: 150, maxWidth: 150 }}>
+        sx={{ my: 1, minWidth: 130, maxWidth: 150 }}>
         <InputLabel id='brand-simple-select-required-label'>{label}</InputLabel>
         <Select
           labelId='brand-simple-select-required-label'

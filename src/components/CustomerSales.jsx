@@ -37,7 +37,7 @@ const CoustomerSales = () => {
 
   const isMobile = useMediaQuery('(max-width: 768px)');
 
-  const baseurl = 'http://localhost:5001/api/v1/data';
+  const baseurl = 'http://192.168.137.1:5001/api/v1/data';
 
   useEffect(() => {
     const getHqData = async () => {

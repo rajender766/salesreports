@@ -75,7 +75,7 @@ export default function SignIn() {
     event.preventDefault();
     try {
       Swal.fire({
-        title: 'Loading',
+        title: 'Loading...',
         allowOutsideClick: false,
         allowEscapeKey: false,
         didOpen: () => {

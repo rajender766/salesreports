@@ -71,7 +71,6 @@ export const TherapeuticGroup = () => {
         },
         itemMarkWidth: 10,
         itemMarkHeight: 10,
-        label: sales.map((tab) => tab.TherapeuticName),
       };
 
   const TOTAL =
@@ -133,7 +132,10 @@ export const TherapeuticGroup = () => {
             },
           }}
           slotProps={{
-            legend: legendProps,
+            legend: {
+              hidden: sales.length > 14 ? true : false,
+              ...legendProps,
+            },
           }}
           margin={{
             top: isMobile ? -70 : 10,

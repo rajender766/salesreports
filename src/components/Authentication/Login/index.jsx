@@ -168,10 +168,6 @@ export default function SignIn() {
                     style={{ width: 180, margin: '3px' }}
                   />
                 </Box>
-
-                {/* <Typography component='h1' variant='h5'>
-            Sign in
-          </Typography> */}
                 <Box component='form' onSubmit={handleSubmit}>
                   <FormControl
                     fullWidth
@@ -189,6 +185,10 @@ export default function SignIn() {
                       value={username}
                       onChange={handleUsernameChange}
                       autoComplete='email'
+                      inputProps={{
+                        minLength: 3, // Minimum length allowed
+                        maxLength: 20, // Maximum length allowed
+                      }}
                       autoFocus
                     />
                   </FormControl>
@@ -203,6 +203,10 @@ export default function SignIn() {
                       value={password}
                       required
                       onChange={handlePasswordChange}
+                      inputProps={{
+                        minLength: 5, // Minimum length allowed
+                        maxLength: 15, // Maximum length allowed
+                      }}
                       endAdornment={
                         <InputAdornment position='end'>
                           <IconButton

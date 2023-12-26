@@ -18,9 +18,9 @@ import {
 import FacebookCircularProgress from './ProgressLoader';
 import { SelectOption, Years } from './SelectInput';
 import { Months } from '../Utils/Months';
+import { handleApiError } from '../Utils/Error';
 
 import './component.css';
-import { handleApiError } from '../Utils/Error';
 
 const CoustomerSales = () => {
   const [selectedYear, setSelectedYear] = useState(
@@ -37,7 +37,7 @@ const CoustomerSales = () => {
 
   const isMobile = useMediaQuery('(max-width: 768px)');
 
-  const baseurl = 'http://192.168.137.1:5001/api/v1/data';
+  const baseurl = 'http://20.235.149.147:5001/api/v1/data';
 
   useEffect(() => {
     const getHqData = async () => {
@@ -121,23 +121,17 @@ const CoustomerSales = () => {
   }, [coustomerCode, selectedYear]);
 
   const salesData = Months.map((month, i) => {
-    const sale = sales.find((sale) => sale.SaleMonth === i + 1);
+    const sale = sales.find((sale) => sale.SaleMonth === i + 1) || {
+      TotalSaleQty: 0,
+      TotalReturnQty: 0,
+      TotalNetQty: 0,
+      TotalFreeQty: 0,
+      TotalSaleAmount: 0,
+      TotalReturnAmount: 0,
+      TotalNetAmount: 0,
+    };
 
-    if (sale) {
-      return { ...sale, MonthName: month };
-    } else {
-      return {
-        MonthName: month,
-        SaleMonth: 0,
-        TotalSaleQty: 0,
-        TotalReturnQty: 0,
-        TotalNetQty: 0,
-        TotalFreeQty: 0,
-        TotalSaleAmount: 0,
-        TotalReturnAmount: 0,
-        TotalNetAmount: 0,
-      };
-    }
+    return { ...sale, MonthName: month };
   });
 
   const handleChartType = (event, newChartType) => {

@@ -11,10 +11,12 @@ const Header = () => {
 
   const isMobile = useMediaQuery('(max-width: 600px)');
   const onClickLogout = () => {
-    Cookies.remove('sales-token');
+    Cookies.remove(`${process.env.REACT_APP_TOKEN}`);
     navigate('/login');
   };
-  const profileDetails = JSON.parse(localStorage.getItem('userDetails'));
+  const profileDetails = JSON.parse(
+    localStorage.getItem(`${process.env.REACT_APP_USER_KEY}`)
+  );
   return (
     <div className='nav_container'>
       <div className='nav-header ms-1 ms-md-2 '>

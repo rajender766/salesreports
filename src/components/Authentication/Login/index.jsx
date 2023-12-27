@@ -69,7 +69,7 @@ export default function SignIn() {
     setRememberMe(event.target.checked);
   };
 
-  const baseUrl = 'http://20.235.149.147:5001/api/v1/emp';
+  const baseUrl = `${process.env.REACT_APP_API}/emp`;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -94,11 +94,14 @@ export default function SignIn() {
 
       if (response.status === 200) {
         const { jwtToken, employeeDetails } = response.data;
-        Cookies.set('sales-token', jwtToken, {
+        Cookies.set(`${process.env.REACT_APP_TOKEN}`, jwtToken, {
           expires: 1,
         });
 
-        localStorage.setItem('userDetails', JSON.stringify(employeeDetails));
+        localStorage.setItem(
+          `${process.env.REACT_APP_USER_KEY}`,
+          JSON.stringify(employeeDetails)
+        );
         if (rememberMe) {
           localStorage.setItem('rememberMe', 'true');
           localStorage.setItem('username', username);

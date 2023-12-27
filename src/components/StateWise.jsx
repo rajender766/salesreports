@@ -29,13 +29,13 @@ export default function StateWiseSales() {
   const [stackOrder, setStackOrder] = useState('appearance');
   const isMobile = useMediaQuery('(max-width: 600px)');
 
-  const baseurl = 'http://20.235.149.147:5001/api/v1/data';
+  const baseurl = `${process.env.REACT_APP_API}/data`;
 
   useEffect(() => {
     const getData = async () => {
       try {
         const brandurl = `${baseurl}/states`;
-        const jwtToken = Cookies.get('sales-token');
+        const jwtToken = Cookies.get(`${process.env.REACT_APP_TOKEN}`);
         const headers = {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwtToken}`,
@@ -61,7 +61,7 @@ export default function StateWiseSales() {
     const getSales = async () => {
       try {
         const Url = `${baseurl}/state/sales`;
-        const jwtToken = Cookies.get('sales-token');
+        const jwtToken = Cookies.get(`${process.env.REACT_APP_TOKEN}`);
         const headers = {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwtToken}`,
@@ -80,7 +80,7 @@ export default function StateWiseSales() {
       }
     };
     getSales();
-  }, [state, selectedYear]);
+  }, [baseurl, state, selectedYear]);
 
   const salesData = xAxis.data.map((month, i) => {
     const sale = sales.find((sale) => sale.SaleMonth === i + 1);

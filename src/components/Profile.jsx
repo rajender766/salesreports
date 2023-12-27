@@ -7,7 +7,9 @@ import Header from './Header';
 
 const Profile = () => {
   document.title = 'Priamry Sales | Profile Details';
-  const profileDetails = JSON.parse(localStorage.getItem('userDetails'));
+  const profileDetails = JSON.parse(
+    localStorage.getItem(`${process.env.REACT_APP_USER_KEY}`)
+  );
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {

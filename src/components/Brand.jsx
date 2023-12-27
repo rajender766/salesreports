@@ -1,8 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import Swal from 'sweetalert2';
 import axios from 'axios';
 
 import CircularProgress from '@mui/material/CircularProgress';
@@ -20,13 +17,13 @@ const Brand = () => {
   const [year, setYear] = useState(`${new Date().getFullYear()}`);
   const [loading, setLoading] = useState(false);
 
-  const baseurl = 'http://20.235.149.147:5001/api/v1/data';
+  const baseurl = `${process.env.REACT_APP_API}/data`;
 
   useEffect(() => {
     const getData = async () => {
       try {
         const brandurl = `${baseurl}/brands`;
-        const jwtToken = Cookies.get('sales-token');
+        const jwtToken = Cookies.get(`${process.env.REACT_APP_TOKEN}`);
         const headers = {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwtToken}`,
@@ -52,7 +49,7 @@ const Brand = () => {
     const brandData = async () => {
       try {
         const Url = `${baseurl}/brand/sales`;
-        const jwtToken = Cookies.get('sales-token');
+        const jwtToken = Cookies.get(`${process.env.REACT_APP_TOKEN}`);
         const headers = {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwtToken}`,
@@ -67,7 +64,7 @@ const Brand = () => {
       }
     };
     brandData();
-  }, [brand, year]);
+  }, [baseurl, brand, year]);
 
   const salesData = Months.map((month, i) => {
     const sale = sales.find((sale) => sale.monthName === i + 1);

@@ -21,13 +21,13 @@ export const TherapeuticGroup = () => {
   const [sales, setSales] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const baseurl = 'http://20.235.149.147:5001/api/v1/data';
+  const baseurl = `${process.env.REACT_APP_API}/data`;
 
   useEffect(() => {
     const getSales = async () => {
       try {
         const Url = `${baseurl}/therapeutic/sales`;
-        const jwtToken = Cookies.get('sales-token');
+        const jwtToken = Cookies.get(`${process.env.REACT_APP_TOKEN}`);
         const headers = {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwtToken}`,
@@ -46,7 +46,7 @@ export const TherapeuticGroup = () => {
       }
     };
     getSales();
-  }, [selectedYear]);
+  }, [baseurl, selectedYear]);
 
   const isMobile = useMediaQuery('(max-width: 600px)'); // Adjust the max-width value based on your breakpoint
 

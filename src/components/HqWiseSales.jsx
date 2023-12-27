@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
@@ -36,14 +37,14 @@ const HqWiseSales = () => {
 
   const isMobile = useMediaQuery('(max-width: 768px)');
 
-  const baseurl = 'http://20.235.149.147:5001/api/v1/data';
+  const baseurl = `${process.env.REACT_APP_API}/data`;
 
   useEffect(() => {
     const getData = async () => {
       try {
         const brandurl = `${baseurl}/hqs`;
 
-        const jwtToken = Cookies.get('sales-token');
+        const jwtToken = Cookies.get(`${process.env.REACT_APP_TOKEN}`);
         const headers = {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwtToken}`,
@@ -69,7 +70,7 @@ const HqWiseSales = () => {
     const getSales = async () => {
       try {
         const Url = `${baseurl}/hq/sales`;
-        const jwtToken = Cookies.get('sales-token');
+        const jwtToken = Cookies.get(`${process.env.REACT_APP_TOKEN}`);
         const headers = {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwtToken}`,

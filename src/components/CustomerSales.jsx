@@ -37,13 +37,13 @@ const CoustomerSales = () => {
 
   const isMobile = useMediaQuery('(max-width: 768px)');
 
-  const baseurl = 'http://20.235.149.147:5001/api/v1/data';
+  const baseurl = `${process.env.REACT_APP_API}/data`;
 
   useEffect(() => {
     const getHqData = async () => {
       try {
         const brandurl = `${baseurl}/hqs`;
-        const jwtToken = Cookies.get('sales-token');
+        const jwtToken = Cookies.get(`${process.env.REACT_APP_TOKEN}`);
         const headers = {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwtToken}`,
@@ -70,7 +70,7 @@ const CoustomerSales = () => {
       try {
         const brandurl = `${baseurl}/customers`;
 
-        const jwtToken = Cookies.get('sales-token');
+        const jwtToken = Cookies.get(`${process.env.REACT_APP_TOKEN}`);
         const headers = {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwtToken}`,
@@ -100,7 +100,7 @@ const CoustomerSales = () => {
     const getSales = async () => {
       try {
         const Url = `${baseurl}/customer/sales`;
-        const jwtToken = Cookies.get('sales-token');
+        const jwtToken = Cookies.get(`${process.env.REACT_APP_TOKEN}`);
         const headers = {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwtToken}`,

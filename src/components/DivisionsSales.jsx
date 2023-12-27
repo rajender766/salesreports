@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 
@@ -30,7 +31,7 @@ const DivisionsSales = () => {
   ]);
   const [loading, setLoading] = useState(false);
 
-  const baseurl =  `${process.env.REACT_APP_API}/data`;
+  const baseurl = `${process.env.REACT_APP_API}/data`;
 
   useEffect(() => {
     const getSales = async () => {

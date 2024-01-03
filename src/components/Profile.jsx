@@ -59,16 +59,32 @@ const Profile = () => {
           </Stack>
           <div className='mt-3 profile-container'>
             <div className='profile-details-container'>
-              <h5>Id : </h5>
-              <p>{profileDetails.employeeId}</p>
+              <h5 className='w-50'>Id : </h5>
+              <p className='w-50 text-start'>{profileDetails.EmpID}</p>
             </div>
             <div className='profile-details-container'>
-              <h5>Name : </h5>
-              <p className='text-uppercase'>{profileDetails.empName}</p>
+              <h5 className='w-50'>Name : </h5>
+              <p className='w-50 text-start text-uppercase'>
+                {profileDetails.empName}
+              </p>
             </div>
             <div className='profile-details-container'>
-              <h5>Division : </h5>
-              <p className='text-uppercase'>{profileDetails.divisionName}</p>
+              <h5 className='w-50'>Division : </h5>
+              <p className='w-50 text-start text-uppercase'>
+                {profileDetails.DivisionName}
+              </p>
+            </div>
+            <div className='profile-details-container'>
+              <h5 className='w-50'>Designation : </h5>
+              <p className='w-50 text-start text-uppercase'>
+                {profileDetails.Designation}
+              </p>
+            </div>
+            <div className='profile-details-container'>
+              <h5 className='w-50'>State : </h5>
+              <p className='w-50 text-start text-uppercase'>
+                {profileDetails.State}
+              </p>
             </div>
           </div>
         </div>
